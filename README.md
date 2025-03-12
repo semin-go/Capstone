@@ -6,8 +6,10 @@
 
 
 ## 🧑‍🤝‍🧑멤버
-- 고세민(gosaemin/rhtpals13@naver.com)
-
+- 신보규(tisqhrb123@naver.com)
+- 정우진(woojin000612@naver.com)
+- 고세민(rhtpals13@naver.com)
+- EGAMOV GIYOS GOFUR UGLI(ghiyeoz@gmail.com)
 
 ## 설치 및 실행방법
 
@@ -16,7 +18,7 @@
 
 
 ## 개발기간
-
+2025.03.10~
 
 ## 개발환경
 
