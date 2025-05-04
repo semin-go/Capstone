@@ -25,6 +25,7 @@ AI 기반 영상 콘텐츠 검열 시스템 개발 프로젝트
 
     
 ## 의존성
+'''txt
 torch==1.13.1
 torchvision==0.14.1
 ultralytics==8.0.153
