@@ -1,0 +1,57 @@
+venv/# === Python (FastAPI backend) ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.log
+*.sqlite3
+.env
+.env.*
+
+# 가상 환경
+venv/
+.venv/
+
+# coverage, test cache
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+.mypy_cache/
+
+# === Node.js (React frontend) ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+build/
+
+# 환경변수 파일
+.env.local
+.env.development
+.env.production
+.env.test
+
+# === Firebase 관련 ===
+.firebase/
+.firebase-debug.log
+
+# === VS Code ===
+.vscode/
+
+# === 운영체제별 무시 파일 ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === 기타 ===
+*.bak
+*.tmp
+*.swp
+*.idea/
+
