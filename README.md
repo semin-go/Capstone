@@ -109,10 +109,14 @@ $source ./venv/Scripts/activate
 ```
 
 # 2. 필수 라이브러리 설치
+```
 pip install -r requirements.txt
+```
 
 # 3. FastAPI 서버 실행
+```
 uvicorn main:app --reload
+```
 
 # 4. React 프론트엔드 실행
 cd frontend
