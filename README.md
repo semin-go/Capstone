@@ -87,17 +87,38 @@ AI 기반 연애 상담 서비스
 
 ##폴더 구조
 ```
-maeumtalk/
-├── backend/
+Capstone/
+├── backend/                # 백엔드 (FastAPI, GPT 처리)
 │   ├── app/
+│   │   ├── routes/         # API 라우팅
+│   │   ├── services/       # GPT, 감정 분석 등 비즈니스 로직
+│   │   ├── models/         # 데이터 모델 (pydantic 등)
+│   │   └── utils/          # 유틸 함수
 │   ├── main.py
-│   └── requirements.txt
-├── frontend/
+│   └── requirements.txt    # 백엔드 의존성
+│
+├── frontend/               # 프론트엔드 (React)
+│   ├── public/
 │   ├── src/
-│   ├── index.html
-│   └── package.json
-├── .env
-└── README.md
+│   │   ├── components/
+│   │   ├── pages/
+│   │   └── hooks/
+│   ├── package.json
+│   └── vite.config.js (or webpack.config.js)
+│
+├── shared/                 # 공통 코드 또는 자산 (선택)
+│   ├── types/
+│   └── constants/
+│
+├── docs/                   # 문서, 기술 가이드
+│   ├── architecture.md
+│   └── usage-guide.md
+│
+├── .env.example            # 환경 변수 템플릿 (실제 .env는 gitignore)
+├── .gitignore
+├── README.md
+└── LICENSE
+
 ```
 ---
 
