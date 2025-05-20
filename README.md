@@ -86,6 +86,7 @@ AI 기반 연애 상담 서비스
 ---
 
 ##폴더 구조
+'''
 maeumtalk/
 ├── backend/
 │   ├── app/
@@ -97,15 +98,14 @@ maeumtalk/
 │   └── package.json
 ├── .env
 └── README.md
-
+'''
 ---
 
 ## 📦 설치 및 실행 방법
-
-'''bash
 # 1. 가상 환경 생성 및 활성화
 python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
+source venv/bin/activate   
+# Windows: venv\Scripts\activate
 
 # 2. 필수 라이브러리 설치
 pip install -r requirements.txt
