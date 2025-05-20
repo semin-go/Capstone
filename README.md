@@ -103,9 +103,10 @@ maeumtalk/
 
 ## 📦 설치 및 실행 방법
 # 1. 가상 환경 생성 및 활성화
+```
 python -m venv venv
-source venv/bin/activate   
-# Windows: venv\Scripts\activate
+$source ./venv/Scripts/activate   
+```
 
 # 2. 필수 라이브러리 설치
 pip install -r requirements.txt
