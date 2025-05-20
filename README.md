@@ -140,7 +140,9 @@ uvicorn main:app --reload
 ```
 
 # 4. React 프론트엔드 실행
+```
 cd frontend
 npm install
 npm run dev
+```
 ---
