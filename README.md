@@ -114,7 +114,7 @@ Capstone/
 │   ├── architecture.md
 │   └── usage-guide.md
 │
-├── .env.example            # 환경 변수 템플릿 (실제 .env는 gitignore)
+├── .env           # 환경 변수 템플릿 (실제 .env는 gitignore)
 ├── .gitignore
 ├── README.md
 └── LICENSE
