@@ -43,12 +43,12 @@ export default function MainPage() {
           <Text style={styles.cardText}>Image-based chat</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.card} onPress={() => router.push('/#')}>
+        <TouchableOpacity style={styles.card} onPress={() => router.push('/TensionGraphPage')}>
           <Image source={require('../assets/images/cardProgress.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Tension Graph</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.card} onPress={() => router.push('/#')}>
+        <TouchableOpacity style={styles.card} onPress={() => router.push('/MbtiMatchPage')}>
           <Image source={require('../assets/images/cardMbti.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>MBTI Match</Text>
         </TouchableOpacity>
