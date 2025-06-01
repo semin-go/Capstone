@@ -1,1 +1,136 @@
 
+import { MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import {
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+
+export default function ConfessionTimingPage() {
+  const router = useRouter();
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* 🔙 뒤로가기 버튼 */}
+      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <MaterialIcons name="arrow-back-ios" size={24} color="#934F28" />
+      </TouchableOpacity>
+
+      {/* 💕 상단 홈 버튼 */}
+      <TouchableOpacity onPress={() => router.replace('/MainPage')} style={styles.homeButton}>
+        <MaterialIcons name="home" size={24} color="#934F28" />
+      </TouchableOpacity>
+
+      {/* 🤖 로봇 이미지 */}
+      <Image
+        source={require('../assets/images/robot.png')}
+        style={styles.robot}
+      />
+
+      {/* 💕 하트 두 개 */}
+      <View style={styles.heartRow}>
+        <Image
+          source={require('../assets/images/heart.png')}
+          style={styles.heart}
+        />
+        <Image
+          source={require('../assets/images/heartBlue.png')}
+          style={styles.heart}
+        />
+      </View>
+
+      {/* ✨ 고백 타이밍 제목 */}
+      <Text style={styles.title}>고백 타이밍</Text>
+
+      {/* ✅ 분석 결과 박스 */}
+      <View style={styles.resultBox}>
+        <Text style={styles.resultText}>
+          💌 고백 성공 확률: <Text style={{ fontWeight: 'bold' }}>60%</Text>
+          {'\n'}
+          최근 대화에서 긍정적인 반응이 많았어요.
+          {'\n'}지금이 타이밍일지도 몰라요!
+        </Text>
+      </View>
+
+      {/* 💗 하단 하트 이미지 */}
+      <Image
+        source={require('../assets/images/heart.png')}
+        style={styles.bottomHeart}
+      />
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#FCEFE4',
+    paddingTop: 40,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    paddingBottom: 60,
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+  },
+  homeButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: '#fff',
+    padding: 6,
+    borderRadius: 10,
+  },
+  robot: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+    marginBottom: 20,
+  },
+  heartRow: {
+    flexDirection: 'row',
+    gap: 20,
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  heart: {
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
+  },
+  title: {
+    fontSize: 18,
+    color: '#934F28',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  resultBox: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingVertical: 24,
+    paddingHorizontal: 30,
+    elevation: 2,
+    marginBottom: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  resultText: {
+    fontSize: 15,
+    textAlign: 'center',
+    color: '#934F28',
+    lineHeight: 24,
+  },
+  bottomHeart: {
+    width: 90,
+    height: 90,
+    resizeMode: 'contain',
+  },
+});
