@@ -2,6 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
+    Image,
     StyleSheet,
     Text,
     TextInput,
@@ -15,9 +16,18 @@ export default function MbtiMatchPage() {
   const [yourMbti, setYourMbti] = useState('');
   const [partnerMbti, setPartnerMbti] = useState('');
 
-  const isInputFilled = yourMbti.trim() !== '' && partnerMbti.trim() !== '';
+  // List of valid MBTI types (case insensitive)
+  const validMbtiTypes = [
+    'ISTJ', 'INFP', 'ENFP', 'ENFJ', 'INFJ', 'INTJ', 'ENTJ', 'INTP', 
+    'ISFP', 'ESFP', 'ESTP', 'ISFJ', 'ESFJ', 'ISTP', 'ENTP', 'ESTJ'
+  ];
 
-  // ✅ 궁합 분석 페이지로 이동
+  // Check if the MBTI is valid
+  const isMbtiValid = (mbti: string) => validMbtiTypes.includes(mbti.trim().toUpperCase());
+
+  // Check if both partner and your MBTI are valid
+  const isInputValid = isMbtiValid(yourMbti) && isMbtiValid(partnerMbti);
+
   const handleAnalyzePress = () => {
     router.push({
       pathname: '/CompatibilityResultPage',
@@ -28,7 +38,6 @@ export default function MbtiMatchPage() {
     });
   };
 
-  // ✅ 상대방 MBTI 분석 페이지로 이동
   const handlePartnerDetailPress = () => {
     router.push({
       pathname: '/MbtiDetailPage',
@@ -40,13 +49,17 @@ export default function MbtiMatchPage() {
 
   return (
     <View style={styles.container}>
-      {/* 🔙 Back & Home */}
+      {/* ❤️🤖 로봇 + 하트 UI */}
+      <View style={styles.imageWrapper}>
+        <Image source={require('../assets/images/robot.png')} style={styles.robot} />
+        <Image source={require('../assets/images/heart.png')} style={styles.heartKo} />
+        <Image source={require('../assets/images/heartBlue.png')} style={styles.heartEn} />
+      </View>
+
+      {/* 🔙 Back only */}
       <View style={styles.topBar}>
         <TouchableOpacity onPress={() => router.back()}>
           <MaterialIcons name="arrow-back-ios" size={24} color="#934F28" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <MaterialIcons name="home" size={24} color="#934F28" />
         </TouchableOpacity>
       </View>
 
@@ -67,19 +80,17 @@ export default function MbtiMatchPage() {
           autoCapitalize="characters"
         />
 
-        {/* 궁합 분석 */}
         <TouchableOpacity
-          style={[styles.menuButton, !isInputFilled && styles.disabled]}
-          disabled={!isInputFilled}
+          style={[styles.menuButton, !isInputValid && styles.disabled]} // Disable if either MBTI is invalid
+          disabled={!isInputValid}
           onPress={handleAnalyzePress}
         >
           <Text style={styles.menuText}>궁합 분석</Text>
         </TouchableOpacity>
 
-        {/* 상대방 MBTI 분석 */}
         <TouchableOpacity
-          style={[styles.menuButton, !partnerMbti.trim() && styles.disabled]}
-          disabled={!partnerMbti.trim()}
+          style={[styles.menuButton, !isMbtiValid(partnerMbti) && styles.disabled]} // Disable if invalid partner MBTI
+          disabled={!isMbtiValid(partnerMbti)}
           onPress={handlePartnerDetailPress}
         >
           <Text style={styles.menuText}>상대방 MBTI 분석</Text>
@@ -99,7 +110,7 @@ const styles = StyleSheet.create({
   },
   topBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 30,
   },
@@ -132,5 +143,31 @@ const styles = StyleSheet.create({
     color: '#934F28',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  imageWrapper: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  robot: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+    marginBottom: -15,
+  },
+  heartKo: {
+    position: 'absolute',
+    top: 20,
+    left: 120,
+    width: 90,
+    height: 90,
+    resizeMode: 'contain',
+  },
+  heartEn: {
+    position: 'absolute',
+    top: 60,
+    left: 160,
+    width: 85,
+    height: 85,
+    resizeMode: 'contain',
   },
 });
