@@ -1,262 +1,250 @@
+import { MaterialIcons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  FlatList,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 
-interface Message {
-  type: 'user' | 'bot';
-  text: string;
-  imageUri?: string;
-}
-
-export default function ChatPhotoPage() {
+export default function imagebasedPage() {
   const router = useRouter();
-  const [input, setInput] = useState('');
-  const [imageUri, setImageUri] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [initialUploadDone, setInitialUploadDone] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState('');
+  const [targetLocation, setTargetLocation] = useState('');
+  const [foodType, setFoodType] = useState('');
+  const [distance, setDistance] = useState('');
 
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled && result.assets?.length > 0) {
-      setImageUri(result.assets[0].uri);
-      if (!initialUploadDone) setInitialUploadDone(true);
+  const handleSearch = () => {
+    if (!currentLocation || !targetLocation || !foodType || !distance) {
+      alert('모든 항목을 입력해주세요!');
+      return;
     }
+
+    router.push({
+      pathname: '/Finding',
+      params: {
+        currentLocation,
+        targetLocation,
+        foodType,
+        distance,
+      },
+    });
   };
 
-  const handleSubmit = () => {
-    if (!input.trim() && !imageUri) return;
-
-    const newUserMessage: Message = {
-      type: 'user',
-      text: input,
-      imageUri: imageUri || undefined,
-    };
-
-    const botReply: Message = {
-      type: 'bot',
-      text: '🤖 Thanks for your input! Here is some advice...',
-    };
-
-    setMessages(prev => [botReply, newUserMessage, ...prev]);
-    setInput('');
-    setImageUri(null);
+  const handleLocationClick = () => {
+    setCurrentLocation('내 현재 위치');
   };
+
+  const isFormFilled =
+    currentLocation.trim() !== '' &&
+    targetLocation.trim() !== '' &&
+    foodType.trim() !== '' &&
+    distance.trim() !== '';
+
+  const distanceOptions = Array.from({ length: 20 }, (_, i) => (i + 1) * 100);
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={styles.wrapper}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      {/* 🔙 Back & 🏠 Home */}
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.push('/MainPage')}>
           <MaterialIcons name="arrow-back-ios" size={24} color="#934F28" />
         </TouchableOpacity>
-        {/* <TouchableOpacity onPress={() => router.replace('/MainPage')}>
-          <MaterialIcons name="home" size={24} color="#934F28" />
-        </TouchableOpacity> */}
+        <Text style={styles.pageTitle}>맛집 추천</Text>
       </View>
 
-      {/* 🖼 Header Images */}
-      <View style={styles.imageBox}>
-        <Image source={require('../assets/images/robot.png')} style={styles.robot} />
-        <Image source={require('../assets/images/heart.png')} style={styles.heartKo} />
-        <Image source={require('../assets/images/heartBlue.png')} style={styles.heartEn} />
-      </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.header}>맛집 찾기</Text>
 
-       {/* 📤 Large upload button (only on first visit) */}  
-      {!initialUploadDone && (
-        <View style={styles.centeredUploadBox}>
-          <TouchableOpacity style={styles.bigUploadButton} onPress={pickImage}>
-            <MaterialIcons name="image" size={32} color="#934F28" style={{ marginBottom: 8 }} />
-            <Text style={styles.bigUploadText}>Upload Chat Image</Text>
+        <Text style={styles.label}>📍 현재 위치</Text>
+        <View style={styles.locationInputWrapper}>
+          <TextInput
+            style={styles.locationInput}
+            placeholder="예: 충북대학교 서문"
+            value={currentLocation}
+            onChangeText={setCurrentLocation}
+            placeholderTextColor="#aaa"
+          />
+          <TouchableOpacity style={styles.gpsButton} onPress={handleLocationClick}>
+            <MaterialIcons name="my-location" size={20} color="#aaa" />
           </TouchableOpacity>
         </View>
-      )}
 
-      {/* 💬 Chat message */}
-      {initialUploadDone && (
-        <>
-          <FlatList
-            data={messages}
-            keyExtractor={(_, i) => i.toString()}
-            renderItem={({ item }) => (
-              <View
-                style={[
-                  styles.messageBubble,
-                  item.type === 'user' ? styles.userBubble : styles.botBubble,
-                ]}
-              >
-                {item.imageUri && (
-                  <Image source={{ uri: item.imageUri }} style={styles.messageImage} />
-                )}
-                <Text style={styles.messageText}>{item.text}</Text>
-              </View>
-            )}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            style={{ flex: 1 }}
-            inverted
-          />
+        <Text style={styles.label}>🚩 원하는 위치</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="예: 충북대"
+          value={targetLocation}
+          onChangeText={setTargetLocation}
+          placeholderTextColor="#aaa"
+        />
 
-          {/* 📝 Input bar */}
-          <View style={styles.inputBar}>
-            {imageUri ? (
-              <TouchableOpacity onPress={pickImage} style={styles.imageThumbContainer}>
-                <Image source={{ uri: imageUri }} style={styles.imageThumb} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={pickImage}>
-                <MaterialIcons name="image" size={26} color="#934F28" />
-              </TouchableOpacity>
-            )}
+        <Text style={styles.label}>🍜 원하는 음식</Text>
+        <View style={styles.input}>
+          <Picker
+            selectedValue={foodType}
+            onValueChange={(itemValue) => setFoodType(itemValue)}
+            mode="dropdown"
+            style={styles.picker}
+            dropdownIconColor="#934F28"
+          >
+            <Picker.Item label="-- 선택해주세요 --" value="" />
+            <Picker.Item label="한식" value="한식" />
+            <Picker.Item label="양식" value="양식" />
+            <Picker.Item label="일식" value="일식" />
+            <Picker.Item label="분식" value="분식" />
+            <Picker.Item label="브런치" value="브런치" />
+            <Picker.Item label="고기구이" value="고기구이" />
+            <Picker.Item label="해물" value="해물" />
+            <Picker.Item label="아시아음식" value="아시아음식" />
+          </Picker>
+        </View>
 
-            <TextInput
-              style={styles.input}
-              value={input}
-              onChangeText={setInput}
-              placeholder="Type a message..."
-              placeholderTextColor="#934F28"
-              onSubmitEditing={handleSubmit}
-              returnKeyType="send"
-            />
+        <Text style={styles.label}>📏 최소 거리 (M)</Text>
+        <View style={styles.input}>
+          <Picker
+            selectedValue={distance}
+            onValueChange={(itemValue) => setDistance(itemValue)}
+            mode="dropdown"
+            style={styles.picker}
+            dropdownIconColor="#934F28"
+          >
+            <Picker.Item label="-- 선택해주세요 --" value="" />
+            {distanceOptions.map((val) => (
+              <Picker.Item key={val} label={`${val}M`} value={String(val)} />
+            ))}
+          </Picker>
+        </View>
 
-            <TouchableOpacity onPress={handleSubmit}>
-              <MaterialIcons name="send" size={24} color="#934F28" />
-            </TouchableOpacity>
-          </View>
-        </>
-      )}
+        <TouchableOpacity
+          style={[styles.button, !isFormFilled && styles.disabledButton]}
+          onPress={handleSearch}
+          disabled={!isFormFilled}
+        >
+          <MaterialIcons name="search" size={24} color="#fff" />
+          <Text style={styles.buttonText}>맛집 찾기</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     flex: 1,
     backgroundColor: '#FCECDC',
-    paddingHorizontal: 20,
-    paddingTop: 50,
   },
   topBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  centeredUploadBox: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 50,
+    paddingBottom: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#FCECDC',
   },
-  bigUploadButton: {
-    backgroundColor: '#fff',
+  pageTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#934F28',
+    marginLeft: 8,
+  },
+  container: {
     paddingVertical: 20,
-    paddingHorizontal: 30,
-    borderRadius: 30,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  bigUploadText: {
-    color: '#934F28',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  messageBubble: {
-    maxWidth: '80%',
-    borderRadius: 20,
-    padding: 12,
-    marginVertical: 6,
-  },
-  userBubble: {
-    backgroundColor: '#fff',
-    alignSelf: 'flex-end',
-  },
-  botBubble: {
-    backgroundColor: '#FAD4C0',
-    alignSelf: 'flex-start',
-  },
-  messageText: {
-    fontSize: 14,
-    color: '#934F28',
-  },
-  messageImage: {
-    width: 200,
-    height: 120,
-    borderRadius: 12,
-    marginBottom: 6,
-  },
-  inputBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    backgroundColor: '#fff',
-    borderRadius: 30,
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    marginBottom: 16,
+    alignItems: 'center',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#934F28',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#934F28',
+    alignSelf: 'flex-start',
+    marginBottom: 6,
+    maxWidth: 500,
   },
   input: {
-    flex: 1,
-    fontSize: 16,
-    color: '#934F28',
+    width: '100%',
+    maxWidth: 500,
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
+    fontSize: 14,
+    marginBottom: 16,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    height: 44,
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
-  imageThumbContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  locationInputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    marginBottom: 16,
+    height: 44,
+    width: '100%',
+    maxWidth: 500,
     overflow: 'hidden',
   },
-  imageThumb: {
-    width: '100%',
+  locationInput: {
+    flex: 1,
+    fontSize: 14,
+    color: '#000',
     height: '100%',
-    resizeMode: 'cover',
+    paddingHorizontal: 12,
+    borderWidth: 0,
   },
-  imageBox: {
+  gpsButton: {
+    width: 44,
+    height: '100%',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    borderLeftWidth: 1,
+    borderColor: '#ddd',
   },
-  robot: {
-    width: 80,
-    height: 80,
-    resizeMode: 'contain',
-    marginBottom: -10,
+  picker: {
+    fontSize: 14,
+    color: '#000',
+    width: '100%',
+    height: 44,
   },
-  heartKo: {
-    position: 'absolute',
-    top: 0,
-    left: 140,
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-    zIndex: -1,
+  button: {
+    maxWidth: 500,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#934F28',
+    paddingVertical: 16, // ✨ 더 큼
+    paddingHorizontal: 24,
+    borderRadius: 30,
+    marginTop: 20,
   },
-  heartEn: {
-    position: 'absolute',
-    top: 60,
-    left: 170,
-    width: 90,
-    height: 90,
-    resizeMode: 'contain',
-    zIndex: -1,
+  disabledButton: {
+    backgroundColor: '#c4a491',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 17, // ✨ 더 큼
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
 });
